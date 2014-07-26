@@ -1,0 +1,30 @@
+{
+	"name": "pods-framework/pods-caldera-forms",
+	"description": "Pods Caldera Forms Processor",
+	"type": "wordpress-plugin",
+	"keywords": ["pods", "wordpress", "calderaforms", "caldera-forms"],
+	"homepage": "https://github.com/pods-framework/pods-caldera-forms",
+	"require": {
+		"php": ">=5.3"
+	},
+	"license": "GPL-2.0",
+	"authors": [
+		{
+			"name": "Pods Framework Team",
+			"email": "contact@pods.io",
+			"homepage": "http://pods.io/"
+		},
+		{
+			"name": "David Cramer",
+			"email": "david@digilab.co.za",
+			"homepage": "http://cramer.co.za"
+		}
+	],
+	"support": {
+		"issues": "https://github.com/pods-framework/pods-caldera-forms/issues",
+		"source": "https://github.com/pods-framework/pods-caldera-forms"
+	},
+	"require": {
+		"composer/installers": "~1.0"
+	}
+}
