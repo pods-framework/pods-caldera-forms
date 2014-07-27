@@ -106,14 +106,17 @@ function pods_cf_load_fields(){
 						$sel = 'data-default="'.$defaults[$selected_pod][$name].'"';
 					}
 					$locktype = '';
+					$caption = '';
 					if($field['type'] === 'pick'){
 						$locktype = 'data-type="'.$field['options'][ 'pick_format_' . $field['options']['pick_format_type'] ].'"';
+						$caption = '<p>'.__('Options will be auto auto-populated', 'pods-caldera-forms').'</p>';
 					}
 				?>
 				<div class="caldera-config-group">
 					<label for="<?php echo $_POST['id']; ?>_fields_<?php echo $name; ?>"><?php echo $field['label']; ?></label>
 					<div class="caldera-config-field">
-						<select class="block-input caldera-field-bind <?php ( '0' == $field['options']['required'] ? '' : 'required' ); ?>" <?php echo $sel; ?> <?php echo $locktype; ?> id="<?php echo $_POST['id']; ?>_fields_<?php echo $name; ?>" name="<?php echo $_POST['name']; ?>[fields][<?php echo $name; ?>]"></select>
+						<select class="block-input caldera-field-bind <?php echo ( empty( $field['options']['required'] ) ? '' : 'required' ); ?>" <?php echo $sel; ?> <?php echo $locktype; ?> id="<?php echo $_POST['id']; ?>_fields_<?php echo $name; ?>" name="<?php echo $_POST['name']; ?>[fields][<?php echo $name; ?>]"></select>
+						<?php echo $caption ?>
 					</div>
 				</div>
 				<?php
