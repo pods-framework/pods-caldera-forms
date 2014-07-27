@@ -63,6 +63,20 @@ function pods_cf_init () {
 
 	}
 
+	/**
+	 * Pre-populate Selects,Radios & Checkboxes
+	 */
+	add_filter( 'caldera_forms_render_get_field_type-dropdown', 'pods_cf_populate_options');
+	add_filter( 'caldera_forms_render_get_field_type-radio', 'pods_cf_populate_options');
+	add_filter( 'caldera_forms_render_get_field_type-checkbox', 'pods_cf_populate_options');
+
+	if( is_admin() ){
+		/**
+		 * Ajax Controls for building Field Binding
+		 */
+		add_action("wp_ajax_pods_cf_load_fields", 'pods_cf_load_fields' );
+	}
+
 	// Include main functions
 	require_once( PODS_CF_DIR . 'includes/functions.php' );
 
