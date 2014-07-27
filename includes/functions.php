@@ -29,21 +29,12 @@ function pods_cf_capture_entry($config, $form){
 		}
 	}
 
-	dump($entry);
-
-    $fields = array(
-        'first_name'    => $first_name,
-        'last_name'        => $last_name,
-        'telephone'        => $telephone,
-        'email'            => $email
-    );
-                    
-    $new_id = pods( 'applicant' )->add( $fields );
+	// Save Entry                     
+    $new_id = pods( $config['pod'] )->add( $entry );
     
-    return $new_id; 
+    // return entry id for metadata
+    return array( 'pod_id' => $new_id );
 
-	dump($transdata,0);
-	dump($config);
 }
 
 /**
