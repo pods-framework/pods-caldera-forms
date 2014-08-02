@@ -26,6 +26,9 @@ $all_pods          = $pods_api->load_pods( array( 'names' => true ) );
 	{{#each object_fields}}
 		'{{@key}}' : "{{this}}",
 	{{/each}}
+	{{#each fields}}
+		'{{@key}}' : "{{this}}",
+	{{/each}}	
 		'_all_' : true
 	} };
 	{{/if}}
