@@ -57,6 +57,9 @@ function pods_cf_init () {
 			"icon"				=>	PODS_CF_URL . "assets/images/pods-icon.png",
 			"template"			=>	PODS_CF_DIR . "ui/setup.php",
 			"post_processor"	=>	'pods_cf_capture_entry',
+			"magic_tags"		=>	array(
+				'pod_id'
+			)
 			
 		);
 		return $processors;
