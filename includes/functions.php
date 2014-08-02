@@ -29,9 +29,9 @@ function pods_cf_capture_entry($config, $form){
 		}
 	}
 
-	// Save Entry                     
+	// Save Entry
     $new_id = pods( $config['pod'] )->add( $entry );
-    
+
     // return entry id for metadata
     return array( 'pod_id' => $new_id );
 
@@ -61,7 +61,9 @@ function pods_cf_populate_options($field){
 			// now lets see if this is a pick field
 			$pod = pods($processor['config']['pod'], null, false );
 			$pod_field = $pod->fields( $bound_field );
-			
+			if(!empty($pod_field['options']['required'])){
+				$field['required'] = 1;
+			}
 			if( $pod_field[ 'type' ] === 'pick' ){
 				
 				$options = PodsForm::options( $pod_field[ 'type' ], $pod_field );
