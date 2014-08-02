@@ -21,14 +21,18 @@ $all_pods          = $pods_api->load_pods( array( 'names' => true ) );
 <div id="pods-binding-{{_id}}">
 </div>
 {{#script}}
+	{{#if object_fields}}
 	var config_{{_id}} = { {{pod}} : {
 	{{#each object_fields}}
 		'{{@key}}' : "{{this}}",
 	{{/each}}
 		'_all_' : true
 	} };
+	{{/if}}
 	function set_config_{{_id}}(el, ev){
-		jQuery(el).data('fields', JSON.stringify( config_{{_id}} ) );
+		if(typeof config_{{_id}} !== 'undefined'){
+			jQuery(el).data('fields', JSON.stringify( config_{{_id}} ) );
+		}
 		return true;
 	}
 {{/script}}
