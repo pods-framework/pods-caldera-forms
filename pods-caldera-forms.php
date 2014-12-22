@@ -56,6 +56,7 @@ function pods_cf_init () {
 			"description"		=>	__("Process submission to a Pod", 'pods-caldera-forms'),
 			"icon"				=>	PODS_CF_URL . "assets/images/pods-icon.png",
 			"template"			=>	PODS_CF_DIR . "ui/setup.php",
+			"pre_processor"		=>	'pods_cf_verify_entry_id',
 			"post_processor"	=>	'pods_cf_capture_entry',
 			"magic_tags"		=>	array(
 				'pod_id'

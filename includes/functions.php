@@ -1,4 +1,24 @@
 <?php
+
+
+/**
+ * verify the pod ID is valid
+ *
+ * @param array $config Settings for the processor
+ * @param array $form Full form structure
+ */
+function pods_cf_verify_entry_id($config, $form){
+	global $transdata;
+
+	// get pod ID
+	if( !empty( $config['pod_id'] ) ){
+		$pod_id = Caldera_Forms::do_magic_tags( $config['pod_id'] );
+		if( empty($pod_id) ){
+			return array('type' => 'error', 'note' => __('Invalid Pod ID', 'pods-caldera-forms' ) );
+		}
+	}
+}
+
 /**
  * Create Pod entry from submission
  *
@@ -7,6 +27,12 @@
  */
 function pods_cf_capture_entry($config, $form){
 	global $transdata;
+
+	// get pod ID
+	$pod_id = null;
+	if( !empty( $config['pod_id'] ) ){
+		$pod_id = Caldera_Forms::do_magic_tags( $config['pod_id'] );
+	}
 
 	// build entry
 	$entry = array();
@@ -30,10 +56,15 @@ function pods_cf_capture_entry($config, $form){
 	}
 
 	// Save Entry
-    $new_id = pods( $config['pod'] )->add( $entry );
+	if( !empty( $pod_id ) ){
+		$pod_id = pods( $config['pod'] )->save( $entry, null, $pod_id );
+	}else{
+		$pod_id = pods( $config['pod'] )->add( $entry );
+	}
+    
 
     // return entry id for metadata
-    return array( 'pod_id' => $new_id );
+    return array( 'pod_id' => $pod_id );
 
 }
 

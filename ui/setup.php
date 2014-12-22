@@ -18,6 +18,15 @@ $all_pods          = $pods_api->load_pods( array( 'names' => true ) );
 		</select>
 	</div>
 </div>
+
+<div class="caldera-config-group">
+	<label><?php echo __( 'Pod ID', 'pods-caldera-forms' ); ?> </label>
+	<div class="caldera-config-field">
+		<input type="text" class="block-input field-config magic-tag-enabled" name="{{_name}}[pod_id]" value="{{pod_id}}">
+	</div>
+	<span class="block-help"><?php echo __( 'Leave blank to act as a create.', 'pods-caldera-forms' ); ?></span>
+</div>
+
 <div id="pods-binding-{{_id}}">
 </div>
 {{#script}}
