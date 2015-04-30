@@ -107,7 +107,41 @@ function pods_cf_admin_nag () {
 
 
 
+add_filter( 'caldera_forms_render_pre_get_entry', 'pods_populate_edit_data', 10, 2 );
+function pods_populate_edit_data( $data, $form ){
 
+	$processors = Caldera_Forms::get_processor_by_type( 'pods', $form );
+	
+	if( !empty( $processors ) ){
+		foreach( $processors as $processor ){
+			if( empty( $processor['config']['pod_id'] ) ){
+				continue;
+			}
+			$pod = pods( $processor['config']['pod'], Caldera_Forms::do_magic_tags( $processor['config']['pod_id'] ) );
+
+			foreach( $processor['config']['fields'] as $field=>$field_id ){
+				if( empty( $field_id ) ){
+					continue;
+				}
+				$line = $pod->field( $field );
+				if( is_array( $line ) ){
+					foreach( $line as $line_item ){
+						if( isset( $line_item['ID'] ) ){
+							$data[ $field_id ][ $line_item['ID'] ] = $line_item['ID'];
+						}else{
+							$line_item['ID'][] = $line_item;
+						}
+					}	
+				}else{
+					$data[ $field_id ] = $line;
+				}
+			}
+
+		}
+	}
+
+	return $data;
+}
 
 
 
