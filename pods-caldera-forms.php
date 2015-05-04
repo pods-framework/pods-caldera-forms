@@ -128,11 +128,11 @@ function pods_populate_edit_data( $data, $form ){
 				if( is_array( $line ) ){
 					foreach( $line as $line_item ){						
 						if( isset( $line_item['ID'] ) ){
-							$data[ $field_id ] = $line_item['ID'];
+							$data[ $field_id ][ $line_item['ID'] ] = $line_item['ID'];
 						}elseif( isset( $line_item['id'] ) ){
-							$data[ $field_id ] = $line_item['id'];
+							$data[ $field_id ][ $line_item['id'] ] = $line_item['id'];
 						}else{
-							$data[ $field_id ] = $line_item;
+							$data[ $field_id ][] = $line_item;
 						}
 					}	
 				}else{
