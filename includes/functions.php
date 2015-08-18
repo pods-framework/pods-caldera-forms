@@ -64,7 +64,7 @@ function pods_cf_capture_entry($config, $form){
     
 
     // return entry id for metadata
-    return array( 'pod_id' => $pod_id );
+    return array( 'pod_id' => $pod_id, 'permalink' => get_permalink( $pod_id  ) );
 
 }
 

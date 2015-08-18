@@ -59,7 +59,8 @@ function pods_cf_init () {
 			"pre_processor"		=>	'pods_cf_verify_entry_id',
 			"post_processor"	=>	'pods_cf_capture_entry',
 			"magic_tags"		=>	array(
-				'pod_id'
+				'pod_id',
+				'permalink'
 			)
 			
 		);
