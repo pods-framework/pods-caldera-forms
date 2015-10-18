@@ -60,20 +60,28 @@ function pods_cf_capture_entry($config, $form){
 		}
 	}
 
+	$pods = pods( $config['pod'] );
+	$fields = $pods->fields();
+
 	// add pod fields
 	if ( ! empty( $config['fields'] ) ) {
 		foreach ( $config['fields'] as $pod_field => $binding ) {
 			if ( ! empty( $binding ) ) {
 				$entry[ $pod_field ] = Caldera_Forms::get_field_data( $binding, $form );
 			}
+
 		}
+
 	}
+
+
+
 
 	// Save Entry
 	if ( ! empty( $pod_id ) ) {
-		$pod_id = pods( $config['pod'] )->save( $entry, null, $pod_id );
+		$pod_id = $pods->save( $entry, null, $pod_id );
 	} else {
-		$pod_id = pods( $config['pod'] )->add( $entry );
+		$pod_id = $pods->add( $entry );
 	}
 
 
@@ -147,6 +155,7 @@ function pods_cf_populate_options( $field ){
  * @since 0.1.0
  */
 function pods_cf_load_fields(){
+	global $form;
 
 		$_POST = stripslashes_deep( $_POST );
 		if(!empty($_POST['fields'])){
@@ -162,9 +171,10 @@ function pods_cf_load_fields(){
 				echo '<h4>' . __('Pod Fields', 'pods-caldera-forms') . '</h4>';
 				foreach ( $pod_object['fields'] as $name => $field ) {
 					$sel = "";
-					if(!empty($defaults[$selected_pod][$name])){
-						$sel = 'data-default="'.$defaults[$selected_pod][$name].'"';
+					if(!empty($defaults[ 'fields' ][$name])){
+						$sel = 'data-default="'.$defaults[ 'fields' ][$name].'"';
 					}
+
 					$locktype = '';
 					$caption = '';
 					if($field['type'] === 'pick'){
@@ -190,8 +200,8 @@ function pods_cf_load_fields(){
 			echo '<h4>' . __('WP Object Fields', 'pods-caldera-forms') . '</h4>';
 			foreach ( $pod_object['object_fields'] as $name => $field ) {
 					$sel = "";
-					if(!empty($defaults[$selected_pod][$name])){
-						$sel = 'data-default="'.$defaults[$selected_pod][$name].'"';
+					if ( ! empty( $defaults['object_fields'][ $name ] ) ) {
+						$sel = 'data-default="' . $defaults['object_fields'][ $name ] . '"';
 					}
 
 				?>
