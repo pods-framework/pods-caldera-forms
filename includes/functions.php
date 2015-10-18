@@ -2,10 +2,14 @@
 
 
 /**
- * verify the pod ID is valid
+ * Verify the pod ID is valid
+ *
+ * @since 1.0.0
  *
  * @param array $config Settings for the processor
  * @param array $form Full form structure
+ *
+ * @return void|array Nothing if Pod is good, error array if not good.
  */
 function pods_cf_verify_entry_id($config, $form){
 	global $transdata;
@@ -14,23 +18,33 @@ function pods_cf_verify_entry_id($config, $form){
 	if( !empty( $config['pod_id'] ) ){
 		$pod_id = Caldera_Forms::do_magic_tags( $config['pod_id'] );
 		if( empty($pod_id) ){
-			return array('type' => 'error', 'note' => __('Invalid Pod ID', 'pods-caldera-forms' ) );
+			return array(
+				'type' => 'error',
+				'note' => __('Invalid Pod ID', 'pods-caldera-forms' )
+			);
+
 		}
+
 	}
+
 }
 
 /**
  * Create Pod entry from submission
  *
+ * @since 1.0.0
+ *
  * @param array $config Settings for the processor
  * @param array $form Full form structure
+ *
+ * @return array
  */
 function pods_cf_capture_entry($config, $form){
 	global $transdata;
 
 	// get pod ID
 	$pod_id = null;
-	if( !empty( $config['pod_id'] ) ){
+	if ( ! empty( $config['pod_id'] ) ) {
 		$pod_id = Caldera_Forms::do_magic_tags( $config['pod_id'] );
 	}
 
@@ -38,75 +52,84 @@ function pods_cf_capture_entry($config, $form){
 	$entry = array();
 
 	// add object fields
-	if(!empty($config['object_fields'])){
-		foreach($config['object_fields'] as $object_field=>$binding){
-			if(!empty($binding)){
-				$entry[$object_field] = Caldera_Forms::get_field_data($binding, $form);
+	if ( ! empty( $config['object_fields'] ) ) {
+		foreach ( $config['object_fields'] as $object_field => $binding ) {
+			if ( ! empty( $binding ) ) {
+				$entry[ $object_field ] = Caldera_Forms::get_field_data( $binding, $form );
 			}
 		}
 	}
 
 	// add pod fields
-	if(!empty($config['fields'])){
-		foreach($config['fields'] as $pod_field=>$binding){
-			if(!empty($binding)){
-				$entry[$pod_field] = Caldera_Forms::get_field_data($binding, $form);
+	if ( ! empty( $config['fields'] ) ) {
+		foreach ( $config['fields'] as $pod_field => $binding ) {
+			if ( ! empty( $binding ) ) {
+				$entry[ $pod_field ] = Caldera_Forms::get_field_data( $binding, $form );
 			}
 		}
 	}
 
 	// Save Entry
-	if( !empty( $pod_id ) ){
+	if ( ! empty( $pod_id ) ) {
 		$pod_id = pods( $config['pod'] )->save( $entry, null, $pod_id );
-	}else{
+	} else {
 		$pod_id = pods( $config['pod'] )->add( $entry );
 	}
-    
 
-    // return entry id for metadata
-    return array( 'pod_id' => $pod_id, 'permalink' => get_permalink( $pod_id  ) );
+
+	// return entry id for metadata
+	return array(
+		'pod_id'    => $pod_id,
+		'permalink' => get_permalink( $pod_id )
+	);
 
 }
 
 /**
- * PrePopulate options to bound fields
+ * Pre-populate options for bound fields
+ *
+ * @since 1.0.0
+ *
+ * @param array $field Field config
+ *
+ * @return array Field config
  */
-function pods_cf_populate_options($field){
+function pods_cf_populate_options( $field ){
 	global $form;
-	$processors = Caldera_Forms::get_processor_by_type('pods', $form);
-	if(empty($processors)){
+	$processors = Caldera_Forms::get_processor_by_type( 'pods', $form );
+	if ( empty( $processors ) ) {
 		return $field;
 	}
 
-	foreach($processors as $processor){
+	foreach ( $processors as $processor ) {
 
 		// is configured
 		$fields = array();
-		if(!empty($processor['config']['fields'])){
-			$fields = array_merge($fields, $processor['config']['fields']);
+		if ( ! empty( $processor['config']['fields'] ) ) {
+			$fields = array_merge( $fields, $processor['config']['fields'] );
 		}
-		if(!empty($processor['config']['object_fields'])){
-			$fields = array_merge($fields, $processor['config']['object_fields']);
+		if ( ! empty( $processor['config']['object_fields'] ) ) {
+			$fields = array_merge( $fields, $processor['config']['object_fields'] );
 		}
-		if( $bound_field = array_search( $field['ID'], $fields ) ){
+		if ( $bound_field = array_search( $field['ID'], $fields ) ) {
 			// now lets see if this is a pick field
-			$pod = pods($processor['config']['pod'], null, false );
+			$pod       = pods( $processor['config']['pod'], null, false );
 			$pod_field = $pod->fields( $bound_field );
-			if(!empty($pod_field['options']['required'])){
+			if ( ! empty( $pod_field['options']['required'] ) ) {
 				$field['required'] = 1;
 			}
-			if( $pod_field[ 'type' ] === 'pick' ){
-				
-				$options = PodsForm::options( $pod_field[ 'type' ], $pod_field );
+			if ( $pod_field['type'] === 'pick' ) {
+
+				$options = PodsForm::options( $pod_field['type'], $pod_field );
 
 				include_once PODS_DIR . 'classes/fields/pick.php';
-				$fieldtype = new PodsField_Pick();
-				$choices = $fieldtype->data( $bound_field, null, $options, $pod );
+				$fieldtype                 = new PodsField_Pick();
+				$choices                   = $fieldtype->data( $bound_field, null, $options, $pod );
 				$field['config']['option'] = array();
-				foreach($choices as $choice_value=>$choice_label){
+				foreach ( $choices as $choice_value => $choice_label ) {
 					$field['config']['option'][] = array(
-						'value'	=>	$choice_value,
-						'label'	=>  $choice_label
+						'value' => $choice_value,
+						'label' => $choice_label
 					);
 				}
 			}
@@ -115,9 +138,13 @@ function pods_cf_populate_options($field){
 	}
 
 	return $field;
+
 }
+
 /**
- * Load Pod Fields config
+ * Load Pod Fields config in admin
+ *
+ * @since 0.1.0
  */
 function pods_cf_load_fields(){
 
@@ -179,4 +206,5 @@ function pods_cf_load_fields(){
 		}
 
 	exit;
+	
 }
